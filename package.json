@@ -1,7 +1,7 @@
 {
-  "name": "bitcoind-rpc",
-  "description": "Bitcoin Client Library to connect to Bitcoin Core via RPC",
-  "version": "0.7.0",
+  "name": "bitcoind-rpc-dash",
+  "description": "Bitcoin Client Library to connect to Dash Core via RPC",
+  "version": "0.7.1",
   "author": {
     "name": "Stephen Pair",
     "email": "stephen@bitpay.com"
@@ -25,12 +25,12 @@
     }
   ],
   "keywords": [
-    "bitcoin",
+    "dash",
     "rpc"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bitpay/bitcoind-rpc"
+    "url": "https://github.com/dashpay/bitcoind-rpc-dash"
   },
   "license": "MIT",
   "main": "lib/index.js",
@@ -47,7 +47,7 @@
     "sinon": "^1.12.2"
   },
   "bugs": {
-    "url": "https://github.com/bitpay/bitcoind-rpc/issues"
+    "url": "https://github.com/dashpay/bitcoind-rpc-dash/issues"
   },
-  "homepage": "https://github.com/bitpay/bitcoind-rpc"
+  "homepage": "https://github.com/dashpay/bitcoind-rpc-dash"
 }

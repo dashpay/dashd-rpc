@@ -1,7 +1,7 @@
 {
   "name": "bitcoind-rpc-dash",
-  "description": "Bitcoin Client Library to connect to Dash Core via RPC",
-  "version": "0.7.2",
+  "description": "Dash Client Library to connect to Dash Core via RPC",
+  "version": "1.0.0",
   "author": {
     "name": "Stephen Pair",
     "email": "stephen@bitpay.com"
@@ -22,6 +22,10 @@
     {
       "name": "Braydon Fuller",
       "email": "braydon@bitpay.com"
+    },
+    {
+      "name":"Alex Werner",
+      "email":"alex.werner@dash.org"
     }
   ],
   "keywords": [
@@ -41,8 +45,8 @@
   "devDependencies": {
     "async": "^0.9.0",
     "chai": "^1.10.0",
-    "coveralls": "^2.11.2",
-    "istanbul": "^0.3.5",
+    "coveralls": "^2.13.1",
+    "istanbul": "^0.4.5",
     "mocha": "^2.1.0",
     "sinon": "^1.12.2"
   },

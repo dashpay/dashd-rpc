@@ -38,7 +38,7 @@ describe('RpcClient', function() {
     };
     RpcClient.config.log = customLogger;
     var s = new RpcClient();
-    s.log.should.equal(customLogger);F
+    s.log.should.equal(customLogger);
     RpcClient.config.log = false;
   });
 
@@ -450,7 +450,7 @@ describe('RpcClient', function() {
     client.getDifficulty(function(error, parsedBuf) {
       requestStub.restore();
       should.exist(error);
-      error.message.should.equal('Dash JSON-RPC: Error Parsing JSON: Unexpected token o');
+      error.message.should.equal('Dash JSON-RPC: Error Parsing JSON: Unexpected token o in JSON at position 1');
       done();
     });
 
@@ -481,7 +481,7 @@ describe('RpcClient', function() {
     client.getDifficulty(function(error, parsedBuf) {
       requestStub.restore();
       should.exist(error);
-      error.message.should.equal('Dash JSON-RPC: Error Parsing JSON: Unexpected end of input');
+      error.message.should.equal('Dash JSON-RPC: Error Parsing JSON: Unexpected end of JSON input');
       done();
     });
 

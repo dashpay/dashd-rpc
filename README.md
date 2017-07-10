@@ -27,7 +27,8 @@ var run = function() {
     user: 'user',
     pass: 'pass',
     host: '127.0.0.1',
-    port: '18332',
+    port: '19998',
+    sensitive:'false'//When set at true, allow all RPC command to be executed
   };
 
   var rpc = new RpcClient(config);
@@ -70,6 +71,25 @@ var run = function() {
 };
 ```
 
+## Help 
+
+You can dynamically access to the help of each method by doing
+```
+const RpcClient = require('.');
+var client = new RPCclient({
+    protocol:'http',
+    user: 'dash',
+    pass: 'local321', 
+    host: '127.0.0.1', 
+    port: 19998
+});
+
+var cb = function (err, data) {
+    console.log(data)
+};
+client.help(cb);//Get full help
+client.help('getinfo',cb);//Get help of specific method
+```
 ## License
 
 **Code released under [the MIT license](https://github.com/bitpay/bitcore/blob/master/LICENSE).**

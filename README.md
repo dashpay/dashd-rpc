@@ -24,7 +24,6 @@ Arguments :
 	- pass : (string - optional) - (default: 'pass') - Set the password credential.
 	- host : (string - optional) - (default: '127.0.0.1') - The host you want to connect with.
 	- port : (integer - optional) - (default: 9998) - Set the port on which perform the RPC command.
-	- sensitive : (boolean - optional) - (default: false) - If set at true, allow all RPC commands (included sensitive one)
 	
 ## Examples
 
@@ -38,8 +37,7 @@ var run = function() {
     user: 'user',
     pass: 'pass',
     host: '127.0.0.1',
-    port: 19998,
-    sensitive: false 
+    port: 19998
   };
 
   var rpc = new RpcClient(config);
@@ -98,8 +96,8 @@ var client = new RPCclient({
 var cb = function (err, data) {
     console.log(data)
 };
-client.help(cb);//Get full help
-client.help('getinfo',cb);//Get help of specific method
+client.help(cb); //Get full help
+client.help('getinfo',cb); //Get help of specific method
 ```
 ## License
 

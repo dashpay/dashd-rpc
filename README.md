@@ -86,7 +86,7 @@ var run = function() {
 
 You can dynamically access to the help of each method by doing
 ```
-const RpcClient = require('.');
+const RpcClient = require('bitcoind-rpc-dash');
 var client = new RPCclient({
     protocol:'http',
     user: 'dash',

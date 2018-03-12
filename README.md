@@ -17,16 +17,51 @@ npm install bitcoind-rpc-dash
 
 ## RpcClient
 
-Arguments : 
+Config parameters : 
 
 	- protocol : (string - optional) - (default: 'https') - Set the protocol to be used. Either `http` or `https`.
 	- user : (string - optional) - (default: 'user') - Set the user credential.
 	- pass : (string - optional) - (default: 'pass') - Set the password credential.
 	- host : (string - optional) - (default: '127.0.0.1') - The host you want to connect with.
 	- port : (integer - optional) - (default: 9998) - Set the port on which perform the RPC command.
+
+IsPromiseBased parameter:
+
+  - `true` if for returning a Promise(), `false` for returning a callback function
+  - default is `false` 
 	
 ## Examples
 
+Promise based:
+```javascript
+var RpcClient = require('bitcoind-rpc-dash');
+
+var config = {
+    protocol: 'http',
+    user: 'dash',
+    pass: 'local321',
+    host: '127.0.0.1',
+    port: 19998
+};
+
+var rpc = new RpcClient(config, true);
+
+rpc.getRawMemPool()
+    .then(ret => {
+        return Promise.all(ret.result.map(r => rpc.getRawTransaction(r)))
+    })
+    .then(rawTxs => {
+        rawTxs.forEach(rawTx => {
+            console.log(`RawTX: ${rawTx.result}`);
+        })
+    })
+    .catch(err => {
+        console.log(err)
+    })
+
+```
+
+Callback based (legacy):
 ```javascript
 var run = function() {
   var bitcore = require('bitcore');

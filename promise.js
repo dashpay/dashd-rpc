@@ -3,7 +3,7 @@ Bluebird = require('bluebird')
 
 class PromisifyModule {
     constructor(options) {
-        const client = new RPCClient();
+        const client = new RPCClient(options);
 
         for (let method in client.apiCalls) {
             let promise = Bluebird.promisify(client[method]);

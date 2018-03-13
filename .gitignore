@@ -29,3 +29,6 @@ node_modules
 
 # intelliJ project files
 .idea
+
+# vscode project files
+launch.json

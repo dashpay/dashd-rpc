@@ -1,5 +1,5 @@
 {
-  "name": "bitcoind-rpc-dash",
+  "name": "@dashevo/bitcoind-rpc",
   "description": "Dash Client Library to connect to Dash Core via RPC",
   "version": "1.0.1",
   "author": {

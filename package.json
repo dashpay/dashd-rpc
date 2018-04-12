@@ -1,5 +1,5 @@
 {
-  "name": "@dashevo/bitcoind-rpc",
+  "name": "@dashevo/dashd-rpc",
   "description": "Dash Client Library to connect to Dash Core via RPC",
   "version": "1.0.1",
   "author": {
@@ -34,7 +34,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dashevo/bitcoind-rpc-dash"
+    "url": "https://github.com/dashevo/dashd-rpc"
   },
   "license": "MIT",
   "main": "lib/index.js",
@@ -53,7 +53,7 @@
     "sinon": "^1.12.2"
   },
   "bugs": {
-    "url": "https://github.com/dashevo/bitcoind-rpc-dash/issues"
+    "url": "https://github.com/dashevo/dashd-rpc/issues"
   },
-  "homepage": "https://github.com/dashevo/bitcoind-rpc-dash"
+  "homepage": "https://github.com/dashevo/dashd-rpc"
 }

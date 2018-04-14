@@ -1,18 +1,18 @@
-bitcoind-rpc-dash.js
+dashd-rpc.js
 ===============
 
-[![NPM Package](https://img.shields.io/npm/v/bitcoind-rpc-dash.svg?style=flat-square)](https://www.npmjs.org/package/bitcoind-rpc-dash)
-[![Build Status](https://img.shields.io/travis/dashpay/bitcoind-rpc-dash.svg?branch=master&style=flat-square)](https://travis-ci.org/dashpay/bitcoind-rpc-dash)
-[![Coverage Status](https://img.shields.io/coveralls/dashpay/bitcoind-rpc-dash.svg?style=flat-square)](https://coveralls.io/r/dashpay/bitcoind-rpc-dash?branch=master)
+[![NPM Package](https://img.shields.io/npm/v/dashd-rpc.svg?style=flat-square)](https://www.npmjs.org/package/@dashevo/dashd-rpc)
+[![Build Status](https://img.shields.io/travis/dashevo/dashd-rpc.svg?branch=master&style=flat-square)](https://travis-ci.org/dashevo/dashd-rpc)
+[![Coverage Status](https://img.shields.io/coveralls/dashevo/dashd-rpc.svg?style=flat-square)](https://coveralls.io/r/dashevo/dashd-rpc?branch=master)
 
 A client library to connect to Dash Core RPC in JavaScript.
 
 ## Get Started
 
-bitcoind-rpc-dash.js runs on [node](http://nodejs.org/), and can be installed via [npm](https://npmjs.org/):
+dashd-rpc.js runs on [node](http://nodejs.org/), and can be installed via [npm](https://npmjs.org/):
 
 ```bash
-npm install bitcoind-rpc-dash
+npm install dashd-rpc
 ```
 
 ## RpcClient
@@ -30,7 +30,7 @@ Arguments :
 ```javascript
 var run = function() {
   var bitcore = require('bitcore');
-  var RpcClient = require('bitcoind-rpc-dash');
+  var RpcClient = require('@dashevo/dashd-rpc');
 
   var config = {
     protocol: 'http',

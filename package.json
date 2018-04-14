@@ -1,6 +1,6 @@
 {
   "name": "@dashevo/dashd-rpc",
-  "description": "Dash Client Library to connect to Dash Core via RPC",
+  "description": "Dash Client Library to connect to Dash Core (dashd) via RPC",
   "version": "1.0.1",
   "author": {
     "name": "Stephen Pair",

@@ -12,34 +12,62 @@ A client library to connect to Dash Core RPC in JavaScript.
 dashd-rpc.js runs on [node](http://nodejs.org/), and can be installed via [npm](https://npmjs.org/):
 
 ```bash
-npm install dashd-rpc
+npm install @dashevo/dashd-rpc
 ```
 
 ## RpcClient
 
-Arguments : 
+Config parameters : 
 
 	- protocol : (string - optional) - (default: 'https') - Set the protocol to be used. Either `http` or `https`.
 	- user : (string - optional) - (default: 'user') - Set the user credential.
 	- pass : (string - optional) - (default: 'pass') - Set the password credential.
 	- host : (string - optional) - (default: '127.0.0.1') - The host you want to connect with.
 	- port : (integer - optional) - (default: 9998) - Set the port on which perform the RPC command.
+
+Promise vs callback based
+
+  - `require('bitcoind-rpc-dash/promise')` to have promises returned
+  - `require('bitcoind-rpc-dash')` to have callback functions returned
 	
 ## Examples
 
+Config:
+```javascript
+var config = {
+    protocol: 'http',
+    user: 'dash',
+    pass: 'local321',
+    host: '127.0.0.1',
+    port: 19998
+};
+```
+
+Promise based:
+```javascript
+var RpcClient = require('bitcoind-rpc-dash/promise');
+var rpc = new RpcClient(config);
+
+rpc.getRawMemPool()
+    .then(ret => {
+        return Promise.all(ret.result.map(r => rpc.getRawTransaction(r)))
+    })
+    .then(rawTxs => {
+        rawTxs.forEach(rawTx => {
+            console.log(`RawTX: ${rawTx.result}`);
+        })
+    })
+    .catch(err => {
+        console.log(err)
+    })
+
+```
+
+Callback based (legacy):
 ```javascript
 var run = function() {
   var bitcore = require('bitcore');
-  var RpcClient = require('@dashevo/dashd-rpc');
-
-  var config = {
-    protocol: 'http',
-    user: 'user',
-    pass: 'pass',
-    host: '127.0.0.1',
-    port: 19998
-  };
-
+  var RpcClient = require('bitcoind-rpc-dash');
   var rpc = new RpcClient(config);
 
   var txids = [];

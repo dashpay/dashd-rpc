@@ -12,7 +12,7 @@ A client library to connect to Dash Core RPC in JavaScript.
 dashd-rpc.js runs on [node](http://nodejs.org/), and can be installed via [npm](https://npmjs.org/):
 
 ```bash
-npm install dashd-rpc
+npm install @dashevo/dashd-rpc
 ```
 
 ## RpcClient

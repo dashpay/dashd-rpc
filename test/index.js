@@ -526,4 +526,24 @@ describe('RpcClient', function() {
 
   });
 
+  it('should throw error when timeout is triggered', (done) => {
+    var client = new RpcClient({
+      user: 'user',
+      pass: 'pass',
+      host: '127.0.0.1',
+      port: 1000,
+    });
+
+    client.httpOptions = {
+      timeout: 100
+    };
+
+    client.getDifficulty((error, parsedBuf) => {
+      should.exist(error);
+      should.not.exist(parsedBuf);
+      error.message.should.equal('timeout')
+      done();
+    })
+  });
+
 });

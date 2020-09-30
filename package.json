@@ -1,7 +1,7 @@
 {
   "name": "@dashevo/dashd-rpc",
   "description": "Dash Client Library to connect to Dash Core (dashd) via RPC",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": {
     "name": "Stephen Pair",
     "email": "stephen@bitpay.com"
@@ -43,8 +43,8 @@
     "coverage": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- --recursive"
   },
   "dependencies": {
-    "async": "^1.3.0",
-    "bluebird": "^3.5.1"
+    "async": "^3.2.0",
+    "bluebird": "^3.7.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",

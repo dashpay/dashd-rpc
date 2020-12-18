@@ -1,14 +1,13 @@
-/* eslint-disable */
-
-RPCClient = require('./lib');
-Bluebird = require('bluebird');
+const Bluebird = require('bluebird');
+const RPCClient = require('./lib');
 
 class PromisifyModule {
   constructor(options) {
     const client = new RPCClient(options);
 
-    for (let method in client.apiCalls) {
-      let promise = Bluebird.promisify(client[method]);
+    // eslint-disable-next-line guard-for-in,no-restricted-syntax
+    for (const method in client.apiCalls) {
+      const promise = Bluebird.promisify(client[method]);
       client[method] = promise;
       client[method.toLowerCase()] = promise;
     }

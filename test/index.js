@@ -161,21 +161,20 @@ describe('RpcClient', function() {
 
   });
 
-  it('should process object arguments', function(done) {
-
-    var client = new RpcClient({
+  it('should process int_str arguments', async () => {
+    const client = new RpcClient({
       user: 'user',
       pass: 'pass',
       host: 'localhost',
       port: 8332,
       rejectUnauthorized: true,
-      disableAgent: false
+      disableAgent: false,
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
-      var res = new FakeResponse();
-      var req = new FakeRequest();
-      setImmediate(function(){
+    const requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
+      const res = new FakeResponse();
+      const req = new FakeRequest();
+      setImmediate(() => {
         res.emit('data', req.data);
         res.emit('end');
       });
@@ -183,19 +182,19 @@ describe('RpcClient', function() {
       return req;
     });
 
-    var obj = {'n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X': 1};
-    async.eachSeries([obj, JSON.stringify(obj)], function(i, next) {
-      client.sendMany('account', i, function(error, parsedBuf) {
-        should.not.exist(error);
-        should.exist(parsedBuf);
-        parsedBuf.params[1].should.have.property('n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X', 1);
-        next();
-      });
-    }, function(err) {
-      requestStub.restore();
-      done();
-    });
+    const blockByHeight = await (new Promise((res) => client.getBlockStats(1, ['height'], (err, data) => res(data))));
 
+    should.exist(blockByHeight);
+    blockByHeight.params[0].should.equal(1);
+    blockByHeight.params[1].should.deep.equal(['height']);
+
+    const blockByHash = await (new Promise((res) => client.getBlockStats('fake_hash', ['height'], (err, data) => res(data))));
+
+    should.exist(blockByHash);
+    blockByHash.params[0].should.equal('fake_hash');
+    blockByHash.params[1].should.deep.equal(['height']);
+
+    requestStub.restore();
   });
 
   it('should batch calls for a method and receive a response', function(done) {

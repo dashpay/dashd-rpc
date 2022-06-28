@@ -525,24 +525,32 @@ describe('RpcClient', function() {
 
   });
 
-});
+  it('should throw error when timeout is triggered', (done) => {
+    var client = new RpcClient({
+      user: 'user',
+      pass: 'pass',
+      host: 'localhost',
+      port: 8332,
+    });
 
-it('should throw error when timeout is triggered', (done) => {
-  var client = new RpcClient({
-    user: 'user',
-    pass: 'pass',
-    host: '127.0.0.1',
-    port: 1000,
+    client.httpOptions = {
+      timeout: 100
+    };
+
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function (options, callback) {
+      var req = new FakeRequest();
+      setTimeout(function () {
+        req.emit('timeout');
+      }, options.timeout + 200);
+      return req;
+    });
+
+    client.getDifficulty((error, parsedBuf) => {
+      should.exist(error);
+      should.not.exist(parsedBuf);
+      error.message.should.equal(`Timeout Error: ${client.httpOptions.timeout}ms exceeded`);
+      requestStub.restore();
+      done();
+    })
   });
-
-  client.httpOptions = {
-    timeout: 100
-  };
-
-  client.getDifficulty((error, parsedBuf) => {
-    should.exist(error);
-    should.not.exist(parsedBuf);
-    error.message.should.equal('Timeout Error: 100ms exceeded')
-    done();
-  })
-});
+})

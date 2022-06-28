@@ -541,7 +541,7 @@ describe('RpcClient', function() {
       var req = new FakeRequest();
       setTimeout(function () {
         req.emit('timeout');
-      }, options.timeout + 200);
+      }, options.timeout);
       return req;
     });
 

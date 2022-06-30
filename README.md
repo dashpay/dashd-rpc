@@ -121,7 +121,8 @@ var client = new RPCclient({
     user: 'dash',
     pass: 'local321', 
     host: '127.0.0.1', 
-    port: 19998
+    port: 19998,
+    timeout: 1000
 });
 
 var cb = function (err, data) {

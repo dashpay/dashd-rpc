@@ -40,7 +40,8 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha test -R spec",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc npm run test",
+    "version": "npm version -m \"chore(release): bump version to v%s\""
   },
   "dependencies": {
     "async": "^3.2.4",

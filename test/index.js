@@ -116,7 +116,7 @@ describe('RpcClient', function() {
       return req;
     });
 
-    client.setTxFee(0.01, function(error, parsedBuf) {
+    client.getAccount('default', function(error, parsedBuf) {
       requestStub.restore();
       should.not.exist(error);
       should.exist(parsedBuf);
@@ -148,10 +148,10 @@ describe('RpcClient', function() {
     });
 
     async.eachSeries([true, 'true', 1, '1', 'True'], function(i, next) {
-      client.importAddress('n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X', '', i, function(error, parsedBuf) {
+      client.getRawMemPool(i, function(error, parsedBuf) {
         should.not.exist(error);
         should.exist(parsedBuf);
-        parsedBuf.params[2].should.equal(true);
+        parsedBuf.params[0].should.equal(true);
         next();
       });
     }, function(err) {
@@ -257,7 +257,7 @@ describe('RpcClient', function() {
       return new FakeRequest();
     });
 
-    client.getBalance('n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X', 6, function(error, parsedBuf) {
+    client.getBlockCount(function(error, parsedBuf) {
       requestStub.restore();
       should.exist(error);
       error.message.should.equal('Dash JSON-RPC: Connection Rejected: 401 Unnauthorized');
@@ -552,5 +552,35 @@ describe('RpcClient', function() {
       requestStub.restore();
       done();
     })
+  });
+
+  it('should call wallet method and receive the response', (done) => {
+
+    var client = new RpcClient({
+      user: 'user',
+      pass: 'pass',
+      host: 'localhost',
+      port: 8332,
+      rejectUnauthorized: true,
+      disableAgent: true
+    });
+
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
+      var res = new FakeResponse();
+      var req =  new FakeRequest();
+      setImmediate(function(){
+        res.emit('data', '{}');
+        res.emit('end');
+      });
+      callback(res);
+      return req;
+    });
+
+    client.getWallet('default').getBalance('n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X', 6, function(error, parsedBuf) {
+      requestStub.restore();
+      should.not.exist(error);
+      should.exist(parsedBuf);
+      done();
+    });
   });
 })

@@ -576,7 +576,7 @@ describe('RpcClient', function() {
       return req;
     });
 
-    client.getBalance('default', 'n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X', 6, function(error, parsedBuf) {
+    client.getBalance('n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X', 6, { wallet: 'default' }, function(error, parsedBuf) {
       requestStub.restore();
       should.not.exist(error);
       should.exist(parsedBuf);

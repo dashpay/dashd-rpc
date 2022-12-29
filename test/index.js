@@ -116,7 +116,7 @@ describe('RpcClient', function() {
       return req;
     });
 
-    client.getAccount('default', function(error, parsedBuf) {
+    client.setTxFee(0.01, function(error, parsedBuf) {
       requestStub.restore();
       should.not.exist(error);
       should.exist(parsedBuf);
@@ -148,10 +148,10 @@ describe('RpcClient', function() {
     });
 
     async.eachSeries([true, 'true', 1, '1', 'True'], function(i, next) {
-      client.getRawMemPool(i, function(error, parsedBuf) {
+      client.importAddress('n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X', '', i, function(error, parsedBuf) {
         should.not.exist(error);
         should.exist(parsedBuf);
-        parsedBuf.params[0].should.equal(true);
+        parsedBuf.params[2].should.equal(true);
         next();
       });
     }, function(err) {
@@ -257,7 +257,7 @@ describe('RpcClient', function() {
       return new FakeRequest();
     });
 
-    client.getBlockCount(function(error, parsedBuf) {
+    client.getBalance('n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X', 6, function(error, parsedBuf) {
       requestStub.restore();
       should.exist(error);
       error.message.should.equal('Dash JSON-RPC: Connection Rejected: 401 Unnauthorized');
@@ -555,7 +555,6 @@ describe('RpcClient', function() {
   });
 
   it('should call wallet method and receive the response', (done) => {
-
     var client = new RpcClient({
       user: 'user',
       pass: 'pass',

@@ -553,4 +553,33 @@ describe('RpcClient', function() {
       done();
     })
   });
+
+  it('should call wallet method and receive the response', (done) => {
+    var client = new RpcClient({
+      user: 'user',
+      pass: 'pass',
+      host: 'localhost',
+      port: 8332,
+      rejectUnauthorized: true,
+      disableAgent: true
+    });
+
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
+      var res = new FakeResponse();
+      var req =  new FakeRequest();
+      setImmediate(function(){
+        res.emit('data', '{}');
+        res.emit('end');
+      });
+      callback(res);
+      return req;
+    });
+
+    client.getBalance('n28S35tqEMbt6vNad7A5K3mZ7vdn8dZ86X', 6, { wallet: 'default' }, function(error, parsedBuf) {
+      requestStub.restore();
+      should.not.exist(error);
+      should.exist(parsedBuf);
+      done();
+    });
+  });
 })

@@ -40,11 +40,11 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha test -R spec",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc npm run test",
+    "version": "npm version -m \"chore(release): bump to v%s\""
   },
   "dependencies": {
-    "async": "^3.2.4",
-    "bluebird": "^3.7.2"
+    "async": "^3.2.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",

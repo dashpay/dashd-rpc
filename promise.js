@@ -1,4 +1,6 @@
-const Bluebird = require('bluebird');
+'use strict';
+
+const promisify = require('util').promisify;
 const RPCClient = require('./lib');
 
 class PromisifyModule {
@@ -7,7 +9,7 @@ class PromisifyModule {
 
     // eslint-disable-next-line guard-for-in,no-restricted-syntax
     for (const method in client.apiCalls) {
-      const promise = Bluebird.promisify(client[method]);
+      const promise = promisify(client[method]);
       client[method] = promise;
       client[method.toLowerCase()] = promise;
     }

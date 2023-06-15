@@ -46,8 +46,7 @@
     "prettier": "npx -p prettier@3.x -- prettier -w '**/*.{js,md}'"
   },
   "dependencies": {
-    "async": "^3.2.4",
-    "bluebird": "^3.7.2"
+    "async": "^3.2.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",

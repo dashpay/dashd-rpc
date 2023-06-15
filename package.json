@@ -43,10 +43,10 @@
     "coverage": "nyc npm run test"
   },
   "dependencies": {
-    "async": "^3.2.4",
     "bluebird": "^3.7.2"
   },
   "devDependencies": {
+    "async": "^3.2.4",
     "chai": "^4.2.0",
     "eslint": "^7.15.0",
     "eslint-config-airbnb-base": "^14.2.1",

@@ -1,23 +1,31 @@
-# dashd-rpc
+# [DashRPC.js](https://github.com/dashhive/DashRPC.js)
 
-[![Build Status](https://github.com/dashevo/dashd-rpc/actions/workflows/test.yml/badge.svg)](https://github.com/dashevo/dashd-rpc/actions/workflows/test.yml)
-[![NPM Package](https://img.shields.io/npm/v/@dashevo/dashd-rpc.svg)](https://www.npmjs.org/package/@dashevo/dashd-rpc)
+[![NPM Package](https://img.shields.io/npm/v/dashrpc.svg)](https://www.npmjs.org/package/dashrpc)
 
-Dash Client Library to connect to Dash Core (dashd) via RPC
+Dash Client Library to connect to Dash Core (`dashd`) via RPC
 
 ## Install
 
 dashd-rpc runs on [node](http://nodejs.org/), and can be installed via [npm](https://npmjs.org/):
 
-```bash
-npm install @dashevo/dashd-rpc
+```sh
+npm install --save dashrpc
 ```
 
 ## Usage
 
+You can examine `RpcClient.callspec` to see the list of supported RPCs:
+
+```js
+console.info('Supported RPCs:');
+console.info(RpcClient.callspec);
+```
+
+If any of them are out of date with [Dash: Docs: RPCs: Quick Reference](https://docs.dash.org/projects/core/en/stable/docs/api/remote-procedure-call-quick-reference.html), feel free to open an issue or PR.
+
 ### RpcClient
 
-Config parameters : 
+Config parameters :
 
 	- protocol : (string - optional) - (default: 'https') - Set the protocol to be used. Either `http` or `https`.
 	- user : (string - optional) - (default: 'user') - Set the user credential.
@@ -25,16 +33,11 @@ Config parameters :
 	- host : (string - optional) - (default: '127.0.0.1') - The host you want to connect with.
 	- port : (integer - optional) - (default: 9998) - Set the port on which perform the RPC command.
 
-Promise vs callback based
-
-  - `require('@dashevo/dashd-rpc/promise')` to have promises returned
-  - `require('@dashevo/dashd-rpc')` to have callback functions returned
-	
 ### Examples
 
 Config:
 
-```javascript
+```js
 var config = {
     protocol: 'http',
     user: 'dash',
@@ -44,70 +47,24 @@ var config = {
 };
 ```
 
-Promise based:
-
-```javascript
-var RpcClient = require('@dashevo/dashd-rpc/promise');
+```js
+var RpcClient = require('dashrpc');
 var rpc = new RpcClient(config);
 
-rpc.getRawMemPool()
-    .then(ret => {
-        return Promise.all(ret.result.map(r => rpc.getRawTransaction(r)))
-    })
-    .then(rawTxs => {
-        rawTxs.forEach(rawTx => {
-            console.log(`RawTX: ${rawTx.result}`);
-        })
-    })
-    .catch(err => {
-        console.log(err)
-    })
-```
+async function main() {
+    let rawMempool = await rpc.getRawMemPool();
+    for (let result of rawMempool.result) {
+        let rawTx = await rpc.getRawTransaction(r);
+        console.info(`RawTX: ${rawTx.result}`);
+    }
+}
 
-Callback based (legacy):
-
-```javascript
-var run = function() {
-  var bitcore = require('@dashevo/dashcore-lib');
-  var RpcClient = require('@dashevo/dashd-rpc');
-  var rpc = new RpcClient(config);
-
-  var txids = [];
-
-  function showNewTransactions() {
-    rpc.getRawMemPool(function (err, ret) {
-      if (err) {
-        console.error(err);
-        return setTimeout(showNewTransactions, 10000);
-      }
-
-      function batchCall() {
-        ret.result.forEach(function (txid) {
-          if (txids.indexOf(txid) === -1) {
-            rpc.getRawTransaction(txid);
-          }
-        });
-      }
-
-      rpc.batch(batchCall, function(err, rawtxs) {
-        if (err) {
-          console.error(err);
-          return setTimeout(showNewTransactions, 10000);
-        }
-
-        rawtxs.map(function (rawtx) {
-          var tx = new bitcore.Transaction(rawtx.result);
-          console.log('\n\n\n' + tx.id + ':', tx.toObject());
-        });
-
-        txids = ret.result;
-        setTimeout(showNewTransactions, 2500);
-      });
-    });
-  }
-
-  showNewTransactions();
-};
+main.then(function () {
+    process.exit(0);
+}).catch(function (err) {
+    console.error(err);
+    process.exit(1);
+})
 ```
 
 ### Help
@@ -115,31 +72,34 @@ var run = function() {
 You can dynamically access to the help of each method by doing
 
 ```
-const RpcClient = require('@dashevo/dashd-rpc');
+const RpcClient = require('dashrpc');
 var client = new RPCclient({
     protocol:'http',
     user: 'dash',
-    pass: 'local321', 
-    host: '127.0.0.1', 
+    pass: 'local321',
+    host: '127.0.0.1',
     port: 19998,
     timeout: 1000
 });
 
-var cb = function (err, data) {
-    console.log(data)
-};
-
 // Get full help
-client.help(cb);
+{
+    let help = client.help();
+    console.log(help)
+}
 
 // Get help of specific method
-client.help('getinfo',cb);
+{
+    let getinfoHelp = client.help('getinfo');
+    console.log(getinfoHelp)
+}
 ```
-
-## Contributing
-
-Feel free to dive in! [Open an issue](https://github.com/dashevo/dash-std-template/issues/new) or submit PRs.
 
 ## License
 
-[MIT](LICENSE) &copy; Dash Core Group, Inc.
+This was originally forked from <https://github.com/dashpay/dashd-rpc>, but has since become its own project.
+
+&copy; 2024-Present Dash Incubator \
+&copy; 2013-2022 Dash Core Group, Inc.
+
+[MIT](./LICENSE)

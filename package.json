@@ -39,8 +39,11 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
+    "fmt": "npm run prettier",
     "test": "mocha test -R spec",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc npm run test",
+    "--------": "------------------------------------------------",
+    "prettier": "npx -p prettier@3.x -- prettier -w '**/*.{js,md}'"
   },
   "dependencies": {
     "async": "^3.2.4",

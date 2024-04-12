@@ -17,30 +17,30 @@ npm install @dashevo/dashd-rpc
 
 ### RpcClient
 
-Config parameters : 
+Config parameters :
 
-	- protocol : (string - optional) - (default: 'https') - Set the protocol to be used. Either `http` or `https`.
-	- user : (string - optional) - (default: 'user') - Set the user credential.
-	- pass : (string - optional) - (default: 'pass') - Set the password credential.
-	- host : (string - optional) - (default: '127.0.0.1') - The host you want to connect with.
-	- port : (integer - optional) - (default: 9998) - Set the port on which perform the RPC command.
+    - protocol : (string - optional) - (default: 'https') - Set the protocol to be used. Either `http` or `https`.
+    - user : (string - optional) - (default: 'user') - Set the user credential.
+    - pass : (string - optional) - (default: 'pass') - Set the password credential.
+    - host : (string - optional) - (default: '127.0.0.1') - The host you want to connect with.
+    - port : (integer - optional) - (default: 9998) - Set the port on which perform the RPC command.
 
 Promise vs callback based
 
-  - `require('@dashevo/dashd-rpc/promise')` to have promises returned
-  - `require('@dashevo/dashd-rpc')` to have callback functions returned
-	
+- `require('@dashevo/dashd-rpc/promise')` to have promises returned
+- `require('@dashevo/dashd-rpc')` to have callback functions returned
+
 ### Examples
 
 Config:
 
 ```javascript
 var config = {
-    protocol: 'http',
-    user: 'dash',
-    pass: 'local321',
-    host: '127.0.0.1',
-    port: 19998
+  protocol: 'http',
+  user: 'dash',
+  pass: 'local321',
+  host: '127.0.0.1',
+  port: 19998,
 };
 ```
 
@@ -50,24 +50,25 @@ Promise based:
 var RpcClient = require('@dashevo/dashd-rpc/promise');
 var rpc = new RpcClient(config);
 
-rpc.getRawMemPool()
-    .then(ret => {
-        return Promise.all(ret.result.map(r => rpc.getRawTransaction(r)))
-    })
-    .then(rawTxs => {
-        rawTxs.forEach(rawTx => {
-            console.log(`RawTX: ${rawTx.result}`);
-        })
-    })
-    .catch(err => {
-        console.log(err)
-    })
+rpc
+  .getRawMemPool()
+  .then((ret) => {
+    return Promise.all(ret.result.map((r) => rpc.getRawTransaction(r)));
+  })
+  .then((rawTxs) => {
+    rawTxs.forEach((rawTx) => {
+      console.log(`RawTX: ${rawTx.result}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 ```
 
 Callback based (legacy):
 
 ```javascript
-var run = function() {
+var run = function () {
   var bitcore = require('@dashevo/dashcore-lib');
   var RpcClient = require('@dashevo/dashd-rpc');
   var rpc = new RpcClient(config);
@@ -89,7 +90,7 @@ var run = function() {
         });
       }
 
-      rpc.batch(batchCall, function(err, rawtxs) {
+      rpc.batch(batchCall, function (err, rawtxs) {
         if (err) {
           console.error(err);
           return setTimeout(showNewTransactions, 10000);
@@ -119,8 +120,8 @@ const RpcClient = require('@dashevo/dashd-rpc');
 var client = new RPCclient({
     protocol:'http',
     user: 'dash',
-    pass: 'local321', 
-    host: '127.0.0.1', 
+    pass: 'local321',
+    host: '127.0.0.1',
     port: 19998,
     timeout: 1000
 });

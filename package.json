@@ -1,7 +1,7 @@
 {
   "name": "@dashevo/dashd-rpc",
   "description": "Dash Client Library to connect to Dash Core (dashd) via RPC",
-  "version": "2.4.0",
+  "version": "18.2.0",
   "author": {
     "name": "Stephen Pair",
     "email": "stephen@bitpay.com"
@@ -43,7 +43,7 @@
     "coverage": "nyc npm run test"
   },
   "dependencies": {
-    "async": "^3.2.0",
+    "async": "^3.2.4",
     "bluebird": "^3.7.2"
   },
   "devDependencies": {
@@ -51,8 +51,8 @@
     "eslint": "^7.15.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "nyc": "15.1.0",
     "mocha": "^8.2.1",
+    "nyc": "15.1.0",
     "sinon": "^9.2.2"
   },
   "bugs": {

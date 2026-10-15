@@ -10,6 +10,9 @@ on:
       - master
       - v[0-9]+.[0-9]+-dev
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Run Dashd RPC tests
@@ -52,7 +55,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # Node 24 ships npm 11, which supports trusted publishing.
+      # Trusted publishing needs npm 11.5.1 or later, which current Node 24
+      # releases ship.
       - uses: actions/setup-node@v7
         with:
           node-version: '24'
@@ -67,17 +71,8 @@ jobs:
             exit 1
           fi
 
-      - name: Enable NPM cache
-        uses: actions/cache@v6
-        with:
-          path: '~/.npm'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install NPM dependencies
-        run: npm ci
-
+      # Publishing needs no dependencies, so this job restores no cache and
+      # runs no install scripts while it can mint a publish token.
       - name: Set release tag
         uses: actions/github-script@v9
         id: tag

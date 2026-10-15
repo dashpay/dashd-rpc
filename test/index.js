@@ -487,7 +487,15 @@ describe('RpcClient', function() {
     client.getDifficulty(function(error, parsedBuf) {
       requestStub.restore();
       should.exist(error);
-      error.message.should.equal('Dash JSON-RPC: Error Parsing JSON: Unexpected token o in JSON at position 1');
+      // The JSON.parse message differs between Node versions, so expect the
+      // one the running engine produces for the same input.
+      var parseError;
+      try {
+        JSON.parse('not a json string');
+      } catch (e) {
+        parseError = e;
+      }
+      error.message.should.equal('Dash JSON-RPC: Error Parsing JSON: ' + parseError.message);
       done();
     });
 

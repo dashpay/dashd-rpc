@@ -197,6 +197,44 @@ describe('RpcClient', function() {
     requestStub.restore();
   });
 
+  it('should call getDeploymentInfo at the chain tip or at a given block', async () => {
+    // Dash Core v24 reports deployments through getdeploymentinfo; getblockchaininfo omits
+    // softforks unless Core runs with -deprecatedrpc=softforks
+    const client = new RpcClient({
+      user: 'user',
+      pass: 'pass',
+      host: 'localhost',
+      port: 8332,
+      rejectUnauthorized: true,
+      disableAgent: false,
+    });
+
+    const requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
+      const res = new FakeResponse();
+      const req = new FakeRequest();
+      setImmediate(() => {
+        res.emit('data', req.data);
+        res.emit('end');
+      });
+      callback(res);
+      return req;
+    });
+
+    try {
+      const atTip = await (new Promise((res) => client.getDeploymentInfo((err, data) => res(data))));
+
+      atTip.method.should.equal('getdeploymentinfo');
+      atTip.params.should.deep.equal([]);
+
+      const atBlock = await (new Promise((res) => client.getdeploymentinfo('fake_hash', (err, data) => res(data))));
+
+      atBlock.method.should.equal('getdeploymentinfo');
+      atBlock.params.should.deep.equal(['fake_hash']);
+    } finally {
+      requestStub.restore();
+    }
+  });
+
   it('should batch calls for a method and receive a response', function(done) {
 
     var client = new RpcClient({
@@ -449,7 +487,15 @@ describe('RpcClient', function() {
     client.getDifficulty(function(error, parsedBuf) {
       requestStub.restore();
       should.exist(error);
-      error.message.should.equal('Dash JSON-RPC: Error Parsing JSON: Unexpected token o in JSON at position 1');
+      // The JSON.parse message differs between Node versions, so expect the
+      // one the running engine produces for the same input.
+      var parseError;
+      try {
+        JSON.parse('not a json string');
+      } catch (e) {
+        parseError = e;
+      }
+      error.message.should.equal('Dash JSON-RPC: Error Parsing JSON: ' + parseError.message);
       done();
     });
 

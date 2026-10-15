@@ -10,20 +10,23 @@ on:
       - master
       - v[0-9]+.[0-9]+-dev
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Run Dashd RPC tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v7
         with:
-          node-version: '16'
+          node-version: '24'
 
       - name: Enable NPM cache
-        uses: actions/cache@v2
+        uses: actions/cache@v6
         with:
           path: '~/.npm'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -41,34 +44,37 @@ jobs:
 
   release:
     name: Release NPM package
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: test
     if: ${{ github.event_name == 'release' }}
+    # npm trusted publishing exchanges the job's OIDC token for a publish
+    # token, so no npm secret is needed.
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v2
+      # Trusted publishing needs npm 11.5.1 or later, which current Node 24
+      # releases ship.
+      - uses: actions/setup-node@v7
         with:
-          node-version: '16'
+          node-version: '24'
 
       - name: Check package version matches tag
-        uses: geritol/match-tag-to-package-version@0.1.0
         env:
-          TAG_PREFIX: refs/tags/v
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [ "$TAG" != "v$VERSION" ]; then
+            echo "::error::Release tag $TAG does not match package version v$VERSION"
+            exit 1
+          fi
 
-      - name: Enable NPM cache
-        uses: actions/cache@v2
-        with:
-          path: '~/.npm'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install NPM dependencies
-        run: npm ci
-
+      # Publishing needs no dependencies, so this job restores no cache and
+      # runs no install scripts while it can mint a publish token.
       - name: Set release tag
-        uses: actions/github-script@v3
+        uses: actions/github-script@v9
         id: tag
         with:
           result-encoding: string
@@ -78,7 +84,6 @@ jobs:
             return (tag.includes('dev') ? `${major}.${minor}-dev` : 'latest');
 
       - name: Publish NPM package
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          tag: ${{ steps.tag.outputs.result }}
+        env:
+          NPM_TAG: ${{ steps.tag.outputs.result }}
+        run: npm publish --access public --tag "$NPM_TAG"

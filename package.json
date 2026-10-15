@@ -34,7 +34,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dashevo/dashd-rpc"
+    "url": "https://github.com/dashpay/dashd-rpc"
   },
   "license": "MIT",
   "main": "lib/index.js",
@@ -56,7 +56,7 @@
     "sinon": "^9.2.2"
   },
   "bugs": {
-    "url": "https://github.com/dashevo/dashd-rpc/issues"
+    "url": "https://github.com/dashpay/dashd-rpc/issues"
   },
-  "homepage": "https://github.com/dashevo/dashd-rpc"
+  "homepage": "https://github.com/dashpay/dashd-rpc"
 }

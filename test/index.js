@@ -197,6 +197,78 @@ describe('RpcClient', function() {
     requestStub.restore();
   });
 
+  describe('argument types', function() {
+    var client;
+    var requestStub;
+
+    beforeEach(function() {
+      client = new RpcClient({
+        user: 'user',
+        pass: 'pass',
+        host: 'localhost',
+        port: 8332,
+      });
+
+      requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
+        var res = new FakeResponse();
+        var req = new FakeRequest();
+        setImmediate(function(){
+          res.emit('data', req.data);
+          res.emit('end');
+        });
+        callback(res);
+        return req;
+      });
+    });
+
+    afterEach(function() {
+      requestStub.restore();
+    });
+
+    function call(method) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      return new Promise(function(resolve, reject) {
+        client[method].apply(client, args.concat(function(err, data) {
+          if (err) return reject(err);
+          resolve(data.params);
+        }));
+      });
+    }
+
+    it('should convert quorum arguments by subcommand', async function() {
+      (await call('quorum', 'info', '6', 'hash', 'true')).should.deep.equal(['info', 6, 'hash', true]);
+      (await call('quorum', 'list', '5')).should.deep.equal(['list', 5]);
+      (await call('quorum', 'memberof', 'protx', '3')).should.deep.equal(['memberof', 'protx', 3]);
+      (await call('quorum', 'verify', 4, 'id', 'msg', 'sig', 'hash', '100'))
+        .should.deep.equal(['verify', 4, 'id', 'msg', 'sig', 'hash', 100]);
+    });
+
+    it('should convert protx, gobject and masternode arguments by subcommand', async function() {
+      (await call('protx', 'list', 'valid', 'true', '1000')).should.deep.equal(['list', 'valid', true, 1000]);
+      (await call('protx', 'register', 'hash', '1', ['1.2.3.4:9999'], 'owner', 'op', 'vote', '0', 'payout', 'fee', 'false'))
+        .should.deep.equal(['register', 'hash', 1, ['1.2.3.4:9999'], 'owner', 'op', 'vote', '0', 'payout', 'fee', false]);
+      (await call('gobject', 'prepare', '0', '1', '1700000000', 'hex'))
+        .should.deep.equal(['prepare', '0', 1, 1700000000, 'hex']);
+      (await call('masternode', 'winners', '10')).should.deep.equal(['winners', 10]);
+    });
+
+    it('should pass arguments of unknown subcommands as is', async function() {
+      (await call('protx', 'shared_sign', 'hex', true)).should.deep.equal(['shared_sign', 'hex', true]);
+    });
+
+    it('should accept verbosity as number or bool', async function() {
+      (await call('getBlock', 'hash', 2)).should.deep.equal(['hash', 2]);
+      (await call('getBlock', 'hash', true)).should.deep.equal(['hash', true]);
+      (await call('getRawTransaction', 'txid', true)).should.deep.equal(['txid', true]);
+      (await call('getRawTransaction', 'txid', '1')).should.deep.equal(['txid', 1]);
+    });
+
+    it('should leave null arguments as is', async function() {
+      (await call('sendToAddress', 'addr', 1, null, null, true))
+        .should.deep.equal(['addr', 1, null, null, true]);
+    });
+  });
+
   it('should batch calls for a method and receive a response', function(done) {
 
     var client = new RpcClient({
